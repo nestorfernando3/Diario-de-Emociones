@@ -77,7 +77,7 @@ h6 {
 .glass-card {
     background: var(--bg-card);
     border: 1px solid var(--border-glass);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-full);
     box-shadow: var(--shadow-card);
     transition: all var(--transition-normal);
 }
@@ -190,7 +190,7 @@ h6 {
     padding: 0.8rem 1.1rem;
     background: var(--bg-secondary);
     border: 1.5px solid var(--border-glass);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-full);
     color: var(--text-primary);
     font-family: var(--font-body);
     font-size: var(--font-size-md);
@@ -279,7 +279,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
 
 .toast {
     padding: var(--space-md) var(--space-lg);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-full);
     font-size: var(--font-size-sm);
     font-weight: 500;
     animation: fadeInUp 0.3s ease;

@@ -25,19 +25,22 @@ export default function LoginPage() {
 
     return (
         <div className="login-page">
-            <div className="login-container">
-                <div className="glass-card login-card">
-                    <div className="login-logo">🌈</div>
+            <div className="login-content">
+                <div className="login-illustration-container">
+                    <img src="/welcome_illustration.png" alt="Persona meditando" className="login-illustration" />
+                </div>
+
+                <div className="login-text-container">
+                    <img src="/app_logo.png" alt="Logo" className="login-logo-img" />
                     <h1 className="login-title">Diario de Emociones</h1>
-                    <p className="login-subtitle">¿Cómo te llamo?</p>
+                    <p className="login-subtitle">Tu espacio sagrado para reflexionar, soltar y crecer.</p>
 
                     <form onSubmit={handleStart} className="login-form">
                         <div className="input-group">
-                            <label className="input-label">Tu nombre</label>
                             <input
-                                className="input-field"
+                                className="input-field login-input"
                                 type="text"
-                                placeholder="Ej. Néstor"
+                                placeholder="¿Cuál es tu nombre?"
                                 value={name}
                                 onChange={e => setName(e.target.value)}
                                 autoFocus
@@ -46,24 +49,15 @@ export default function LoginPage() {
                         </div>
 
                         <button
-                            className="btn btn-primary btn-full"
+                            className="btn btn-warm btn-full btn-lg login-btn"
                             type="submit"
                             disabled={!name.trim() || loading}
                         >
-                            {loading ? '⏳ Entrando...' : '✨ Comenzar'}
+                            {loading ? '⏳ Entrando...' : 'Comenzar mi viaje ✨'}
                         </button>
-
-                        <p style={{
-                            textAlign: 'center',
-                            fontSize: '0.78rem',
-                            color: 'var(--text-muted)',
-                            marginTop: '0.75rem'
-                        }}>
-                            🔒 Tus datos se guardan solo en este dispositivo
-                        </p>
                     </form>
 
-                    <p className="login-quote">"{quote}"</p>
+                    <p className="login-quote">{quote}</p>
                 </div>
             </div>
         </div>

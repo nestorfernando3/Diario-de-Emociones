@@ -79,22 +79,31 @@ export default function DashboardPage() {
         <div className="dashboard animate-fade-in">
             <header className="dashboard-header">
                 <div>
-                    <h1 className="dashboard-greeting">{greeting}, {user?.displayName || user?.username}! 👋</h1>
+                    <h1 className="dashboard-greeting">{greeting}, {user?.displayName || user?.username}!</h1>
                     <p className="dashboard-date">
                         {new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                     </p>
                 </div>
-                <button className="btn btn-primary" onClick={() => navigate('/new-entry')}>
-                    ✍️ Nuevo Registro
+                <button className="btn btn-warm btn-lg" onClick={() => navigate('/new-entry')} style={{ borderRadius: 'var(--radius-full)' }}>
+                    <span>✨ Nueva Reflexión</span>
                 </button>
             </header>
+
+            {/* Tip Banner */}
+            <div className="tip-card glass-card">
+                <div className="tip-icon">💡</div>
+                <div className="tip-content">
+                    <h3 className="tip-title">Consejo del día</h3>
+                    <p>{tip}</p>
+                </div>
+            </div>
 
             {/* Stats Grid */}
             <div className="stats-grid">
                 <div className="stat-card glass-card">
                     <span className="stat-icon">📝</span>
                     <span className="stat-value">{stats.total}</span>
-                    <span className="stat-label">Total registros</span>
+                    <span className="stat-label">Registros</span>
                 </div>
                 <div className="stat-card glass-card">
                     <span className="stat-icon">📅</span>
@@ -104,18 +113,13 @@ export default function DashboardPage() {
                 <div className="stat-card glass-card">
                     <span className="stat-icon">🔥</span>
                     <span className="stat-value">{stats.streak}</span>
-                    <span className="stat-label">Racha (días)</span>
+                    <span className="stat-label">Días seguidos</span>
                 </div>
                 <div className="stat-card glass-card">
                     <span className="stat-icon">💓</span>
                     <span className="stat-value">{stats.avgIntensity}%</span>
-                    <span className="stat-label">Intensidad prom.</span>
+                    <span className="stat-label">Intensidad Prom.</span>
                 </div>
-            </div>
-
-            {/* Tip */}
-            <div className="tip-card glass-card">
-                <p>{tip}</p>
             </div>
 
             {/* Constellation */}

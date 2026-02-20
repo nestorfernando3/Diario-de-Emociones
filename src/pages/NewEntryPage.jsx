@@ -77,29 +77,35 @@ export default function NewEntryPage() {
         <div className="new-entry-page animate-fade-in">
             {/* Progress bar */}
             <div className="wizard-progress">
-                <div className="wizard-progress-bar" style={{ width: `${progress}%`, background: selectedEmotion?.color || 'var(--primary-500)' }} />
+                <div className="wizard-progress-bar" style={{ width: `${progress}%`, background: selectedEmotion?.color || 'var(--primary-400)' }} />
             </div>
 
             <div className="wizard-header">
+                <button className="btn btn-ghost btn-icon wizard-back-btn" onClick={() => step > 0 ? setStep(step - 1) : navigate(-1)}>
+                    ←
+                </button>
                 <div className="wizard-step-indicator">
                     {STEPS.map((s, i) => (
                         <div key={i} className={`step-dot ${i === step ? 'step-dot--active' : i < step ? 'step-dot--done' : ''}`}
-                            style={i === step ? { background: selectedEmotion?.color } : i < step ? { background: selectedEmotion?.color, opacity: 0.5 } : {}}
+                            style={i === step ? { background: selectedEmotion?.color || 'var(--primary-500)' } : i < step ? { background: selectedEmotion?.color || 'var(--primary-300)' } : {}}
                             onClick={() => i < step && setStep(i)} />
                     ))}
                 </div>
-                <span className="wizard-step-count">Paso {step + 1} de {STEPS.length}</span>
+                <div style={{ width: 40 }} /> {/* Spacer to balance back button */}
             </div>
 
-            <div className="wizard-content glass-card animate-fade-in-up" key={step}>
+            <div className="wizard-content animate-fade-in-up" key={step}>
                 <div className="wizard-step-header">
-                    <span className="wizard-step-icon">{currentStep.icon}</span>
+                    <div className="wizard-step-icon-wrapper" style={{ background: selectedEmotion?.color ? `${selectedEmotion.color}15` : 'var(--primary-50)' }}>
+                        <span className="wizard-step-icon">{currentStep.icon}</span>
+                    </div>
                     <h2 className="wizard-step-title">{currentStep.title}</h2>
                     <p className="wizard-step-desc">{currentStep.desc}</p>
-                    <button className="tip-toggle btn btn-ghost btn-sm" onClick={() => setShowTip(!showTip)}>
+
+                    <button className="tip-toggle" onClick={() => setShowTip(!showTip)}>
                         {showTip ? '🙈 Ocultar tip' : '💡 Ver tip'}
                     </button>
-                    {showTip && <div className="wizard-tip animate-fade-in-down">{currentStep.tip}</div>}
+                    {showTip && <div className="wizard-tip glass-card animate-fade-in-down">{currentStep.tip}</div>}
                 </div>
 
                 <div className="wizard-step-body">
@@ -219,18 +225,20 @@ export default function NewEntryPage() {
                 </div>
             </div>
 
-            {/* Navigation buttons */}
+            {/* Navigation button centered at the bottom */}
             <div className="wizard-nav">
-                <button className="btn btn-secondary" onClick={() => step > 0 ? setStep(step - 1) : navigate(-1)}>
-                    {step === 0 ? '← Cancelar' : '← Anterior'}
-                </button>
                 {step < STEPS.length - 1 ? (
-                    <button className="btn btn-primary" onClick={() => setStep(step + 1)} disabled={!canProceed()}>
-                        Siguiente →
+                    <button
+                        className="btn btn-primary btn-lg btn-full wizard-next-btn"
+                        onClick={() => setStep(step + 1)}
+                        disabled={!canProceed()}
+                        style={selectedEmotion ? { background: selectedEmotion.color, boxShadow: `0 4px 14px ${selectedEmotion.color}40` } : {}}
+                    >
+                        Siguiente
                     </button>
                 ) : (
-                    <button className="btn btn-primary" onClick={handleSubmit} disabled={saving}>
-                        {saving ? '⏳ Guardando...' : '✨ Guardar Registro'}
+                    <button className="btn btn-warm btn-lg btn-full wizard-next-btn" onClick={handleSubmit} disabled={saving}>
+                        {saving ? '⏳ Guardando...' : '✨ Terminar y Guardar'}
                     </button>
                 )}
             </div>

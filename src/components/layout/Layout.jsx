@@ -18,7 +18,7 @@ export default function Layout() {
         <div className="app-layout">
             <aside className="sidebar glass-card">
                 <div className="sidebar-header">
-                    <span className="sidebar-logo">🌈</span>
+                    <img src="/app_logo.png" alt="Logo" style={{ width: '36px', height: '36px', objectFit: 'contain' }} />
                     <h2 className="sidebar-title">Diario</h2>
                 </div>
 
@@ -39,10 +39,9 @@ export default function Layout() {
                         </div>
                         <div className="sidebar-user-info">
                             <span className="sidebar-user-name">{user?.displayName || user?.username}</span>
-                            <span className="sidebar-user-email">{user?.email}</span>
                         </div>
                     </div>
-                    <button className="btn btn-ghost btn-sm" onClick={logout} title="Cerrar sesión">🚪</button>
+                    <button className="btn btn-ghost btn-sm btn-icon" onClick={logout} title="Cambiar Nombre">✏️</button>
                 </div>
             </aside>
 
