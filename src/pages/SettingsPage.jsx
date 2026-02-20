@@ -106,6 +106,44 @@ export default function SettingsPage() {
                 </div>
             </section>
 
+            {/* Data Import/Export */}
+            <section className="settings-section glass-card">
+                <h2 className="section-title">📦 Tus Datos Locales</h2>
+                <p className="section-desc">
+                    Esta versión de la aplicación guarda todos tus registros y configuraciones localmente en tu navegador para proteger tu privacidad.
+                    Si cambias de dispositivo o navegador, tus datos NO se sincronizarán automáticamente.
+                </p>
+                <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem', flexDirection: 'column' }}>
+                    <div className="input-group">
+                        <label className="input-label">Restaurar Datos (Importar JSON)</label>
+                        <input
+                            type="file"
+                            accept=".json"
+                            style={{ display: 'none' }}
+                            id="import-file"
+                            onChange={async (e) => {
+                                const file = e.target.files[0];
+                                if (!file) return;
+                                try {
+                                    const text = await file.text();
+                                    const json = JSON.parse(text);
+                                    if (!Array.isArray(json)) throw new Error("El archivo no tiene el formato correcto.");
+                                    const count = await import('../services/api').then(m => m.entriesAPI.importMany(json));
+                                    setMessage(`📦 ¡Éxito! Se han importado ${count} registros.`);
+                                } catch (err) {
+                                    setMessage('❌ Error al importar: ' + err.message);
+                                }
+                                e.target.value = ''; // reset
+                            }}
+                        />
+                        <button className="btn btn-secondary" onClick={() => document.getElementById('import-file').click()}>
+                            📥 Seleccionar Archivo JSON
+                        </button>
+                        <span className="input-hint">Sube un archivo JSON generado con la opción "Exportar JSON" de la página Análisis.</span>
+                    </div>
+                </div>
+            </section>
+
             {/* About */}
             <section className="settings-section glass-card">
                 <h2 className="section-title">ℹ️ Acerca de</h2>
