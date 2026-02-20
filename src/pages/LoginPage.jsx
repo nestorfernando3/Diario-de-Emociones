@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { EmotionOrb } from '../components/three/EmotionOrb';
 import './LoginPage.css';
 
 const QUOTES = [
@@ -26,10 +25,6 @@ export default function LoginPage() {
 
     return (
         <div className="login-page">
-            <div className="login-orb-bg">
-                <EmotionOrb />
-            </div>
-
             <div className="login-container">
                 <div className="glass-card login-card">
                     <div className="login-logo">🌈</div>
