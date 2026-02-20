@@ -173,7 +173,8 @@ export const aiAPI = {
         const userId = getCurrentUserId();
         const configs = getStorage(STORAGE_KEY_AI_CONFIG, {});
         const userConfig = configs[userId] || { provider: 'openai', apiKey: '' };
-        return { hasKey: !!userConfig.apiKey, provider: userConfig.provider };
+        const hasKey = userConfig.provider === 'ollama' ? true : !!userConfig.apiKey;
+        return { hasKey, provider: userConfig.provider, apiKey: userConfig.apiKey || '' };
     },
     setConfig: async (data) => {
         await delay(200);
@@ -194,8 +195,8 @@ export const aiAPI = {
         const configs = getStorage(STORAGE_KEY_AI_CONFIG, {});
         const userConfig = configs[userId];
 
-        if (!userConfig || !userConfig.apiKey) {
-            throw new Error('Necesitas configurar tu API Key en Ajustes antes de usar el análisis con IA');
+        if (!userConfig || (userConfig.provider !== 'ollama' && !userConfig.apiKey)) {
+            throw new Error('Necesitas configurar tu API Key en Ajustes antes de usar el análisis con IA.');
         }
 
         const entries = await entriesAPI.list({ startDate: data.startDate, endDate: data.endDate });
@@ -249,7 +250,7 @@ Sé empático, constructivo y específico. Responde siempre en español.`;
 
             } else if (provider === 'gemini') {
                 const response = await fetch(
-                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -291,6 +292,9 @@ Sé empático, constructivo y específico. Responde siempre en español.`;
             };
 
         } catch (err) {
+            if (err.message.includes('Failed to fetch')) {
+                throw new Error(`CORS/Red: Tu navegador bloqueó la conexión a ${provider}. Revisa si tu AdBlocker o la política del API (ej. OpenAI bloquea CORS) impide la conexión directa.`);
+            }
             throw new Error(`Error al conectar con ${provider}: ${err.message}`);
         }
     }
