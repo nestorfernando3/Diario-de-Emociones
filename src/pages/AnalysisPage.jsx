@@ -62,7 +62,7 @@ export default function AnalysisPage() {
 
     return (
         <div className="analysis-page animate-fade-in">
-            <h1 className="page-title">🤖 Análisis con IA</h1>
+            <h1 className="page-title">Análisis con IA</h1>
             <p className="page-subtitle">
                 Analiza tus patrones emocionales y recibe retroalimentación personalizada.
                 Tienes <strong>{entriesCount}</strong> registros en total.
@@ -70,7 +70,7 @@ export default function AnalysisPage() {
 
             {!config.hasKey && (
                 <div className="config-warning glass-card">
-                    <span className="warning-icon">⚠️</span>
+                    <span className="warning-icon">⚠</span>
                     <div>
                         <p><strong>API Key no configurada</strong></p>
                         <p>Ve a <strong>Ajustes</strong> para configurar tu clave de API ({config.provider === 'gemini' ? 'Google Gemini' : 'OpenAI'})</p>
@@ -96,11 +96,11 @@ export default function AnalysisPage() {
                 <div className="analysis-actions">
                     <button className="btn btn-primary btn-lg" onClick={handleAnalyze}
                         disabled={loading || !config.hasKey}>
-                        {loading ? '🔄 Analizando...' : '🧠 Analizar mis emociones'}
+                        {loading ? 'Analizando...' : 'Analizar mis emociones'}
                     </button>
                     <div className="export-buttons">
-                        <button className="btn btn-secondary btn-sm" onClick={() => handleExport('json')}>📥 JSON</button>
-                        <button className="btn btn-secondary btn-sm" onClick={() => handleExport('csv')}>📊 CSV</button>
+                        <button className="btn btn-secondary btn-sm" onClick={() => handleExport('json')}>JSON</button>
+                        <button className="btn btn-secondary btn-sm" onClick={() => handleExport('csv')}>CSV</button>
                     </div>
                 </div>
             </div>
@@ -109,7 +109,7 @@ export default function AnalysisPage() {
 
             {loading && (
                 <div className="analysis-loading">
-                    <div className="loading-orb animate-breathe">🧠</div>
+                    <div className="loading-orb animate-breathe">···</div>
                     <p>Analizando tus registros emocionales...</p>
                     <p className="loading-sub">Esto puede tomar unos segundos</p>
                 </div>
@@ -118,7 +118,7 @@ export default function AnalysisPage() {
             {result && (
                 <div className="analysis-results animate-fade-in-up">
                     <div className="results-header">
-                        <h2>📋 Resultados del Análisis</h2>
+                        <h2>Resultados del Análisis</h2>
                         <span className="results-meta">
                             {result.entriesAnalyzed} registros • {result.dateRange?.start} a {result.dateRange?.end}
                         </span>
@@ -126,14 +126,14 @@ export default function AnalysisPage() {
 
                     {/* Summary */}
                     <div className="result-card glass-card">
-                        <h3>📝 Resumen General</h3>
+                        <h3>Resumen General</h3>
                         <p>{result.analysis?.summary}</p>
                     </div>
 
                     {/* Emotional trend */}
                     {result.analysis?.emotionalTrend && (
                         <div className="result-card glass-card">
-                            <h3>📈 Tendencia Emocional</h3>
+                            <h3>Tendencia Emocional</h3>
                             <p>{result.analysis.emotionalTrend}</p>
                         </div>
                     )}
@@ -141,7 +141,7 @@ export default function AnalysisPage() {
                     {/* Patterns */}
                     {result.analysis?.patterns?.length > 0 && (
                         <div className="result-card glass-card">
-                            <h3>🔍 Patrones Identificados</h3>
+                            <h3>Patrones Identificados</h3>
                             <ul className="result-list">
                                 {result.analysis.patterns.map((p, i) => (
                                     <li key={i}>{p}</li>
@@ -153,7 +153,7 @@ export default function AnalysisPage() {
                     {/* Cognitive distortions */}
                     {result.analysis?.cognitiveDistortions?.length > 0 && (
                         <div className="result-card glass-card result-card--warning">
-                            <h3>🧠 Distorsiones Cognitivas Detectadas</h3>
+                            <h3>Distorsiones Cognitivas Detectadas</h3>
                             <ul className="result-list">
                                 {result.analysis.cognitiveDistortions.map((d, i) => (
                                     <li key={i}>{d}</li>
@@ -165,7 +165,7 @@ export default function AnalysisPage() {
                     {/* Strengths */}
                     {result.analysis?.strengths?.length > 0 && (
                         <div className="result-card glass-card result-card--success">
-                            <h3>💪 Fortalezas</h3>
+                            <h3>Fortalezas</h3>
                             <ul className="result-list">
                                 {result.analysis.strengths.map((s, i) => (
                                     <li key={i}>{s}</li>
@@ -177,7 +177,7 @@ export default function AnalysisPage() {
                     {/* Recommendations */}
                     {result.analysis?.recommendations?.length > 0 && (
                         <div className="result-card glass-card result-card--primary">
-                            <h3>💡 Recomendaciones</h3>
+                            <h3>Recomendaciones</h3>
                             <ul className="result-list">
                                 {result.analysis.recommendations.map((r, i) => (
                                     <li key={i}>{r}</li>

@@ -1,13 +1,14 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { IconHome, IconCalendar, IconPencil, IconBrain, IconSettings, IconLogout } from '../icons/AppIcons';
 import './Layout.css';
 
 const NAV_ITEMS = [
-    { path: '/dashboard', icon: '🏠', label: 'Dashboard' },
-    { path: '/calendar', icon: '📅', label: 'Calendario' },
-    { path: '/new-entry', icon: '✍️', label: 'Nuevo Registro' },
-    { path: '/analysis', icon: '🤖', label: 'Análisis IA' },
-    { path: '/settings', icon: '⚙️', label: 'Ajustes' },
+    { path: '/dashboard', Icon: IconHome, label: 'Inicio' },
+    { path: '/calendar', Icon: IconCalendar, label: 'Calendario' },
+    { path: '/new-entry', Icon: IconPencil, label: 'Registrar' },
+    { path: '/analysis', Icon: IconBrain, label: 'Análisis IA' },
+    { path: '/settings', Icon: IconSettings, label: 'Ajustes' },
 ];
 
 export default function Layout() {
@@ -16,9 +17,9 @@ export default function Layout() {
 
     return (
         <div className="app-layout">
-            <aside className="sidebar glass-card">
+            <aside className="sidebar">
                 <div className="sidebar-header">
-                    <img src="/app_logo.png" alt="Logo" style={{ width: '36px', height: '36px', objectFit: 'contain' }} />
+                    <img src="/app_logo.png" alt="Logo" className="sidebar-logo-img" />
                     <h2 className="sidebar-title">Diario</h2>
                 </div>
 
@@ -26,7 +27,7 @@ export default function Layout() {
                     {NAV_ITEMS.map(item => (
                         <NavLink key={item.path} to={item.path}
                             className={({ isActive }) => `nav-item ${isActive ? 'nav-item--active' : ''}`}>
-                            <span className="nav-icon">{item.icon}</span>
+                            <span className="nav-icon"><item.Icon size={20} /></span>
                             <span className="nav-label">{item.label}</span>
                         </NavLink>
                     ))}
@@ -41,7 +42,9 @@ export default function Layout() {
                             <span className="sidebar-user-name">{user?.displayName || user?.username}</span>
                         </div>
                     </div>
-                    <button className="btn btn-ghost btn-sm btn-icon" onClick={logout} title="Cambiar Nombre">✏️</button>
+                    <button className="btn btn-ghost btn-sm btn-icon" onClick={logout} title="Cambiar usuario">
+                        <IconLogout size={16} />
+                    </button>
                 </div>
             </aside>
 

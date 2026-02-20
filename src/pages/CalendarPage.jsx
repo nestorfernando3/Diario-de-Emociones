@@ -94,8 +94,8 @@ export default function CalendarPage() {
     return (
         <div className="calendar-page animate-fade-in">
             <header className="calendar-header">
-                <h1 className="page-title">📅 Calendario</h1>
-                <button className="btn btn-primary" onClick={() => navigate('/new-entry')}>✍️ Nuevo Registro</button>
+                <h1 className="page-title">Calendario</h1>
+                <button className="btn btn-warm" onClick={() => navigate('/new-entry')}>Nuevo Registro</button>
             </header>
 
             <div className="calendar-container glass-card">
@@ -132,7 +132,7 @@ export default function CalendarPage() {
             {selectedDay && (
                 <div className="day-detail glass-card animate-fade-in-up">
                     <div className="day-detail-header">
-                        <h3>📌 {new Date(selectedDay + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })}</h3>
+                        <h3>{new Date(selectedDay + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })}</h3>
                         <button className="btn btn-primary btn-sm" onClick={() => navigate(`/new-entry?date=${selectedDay}`)}>+ Agregar</button>
                     </div>
                     {dayEntries.length === 0 ? (
@@ -147,7 +147,7 @@ export default function CalendarPage() {
                                         <span className="day-entry-intensity">{entry.feeling_intensity}%{entry.re_rating != null ? ` → ${entry.re_rating}%` : ''}</span>
                                         <p className="day-entry-situation">{entry.situation}</p>
                                         {entry.alternative_thought && (
-                                            <p className="day-entry-alt">💭 {entry.alternative_thought}</p>
+                                            <p className="day-entry-alt">{entry.alternative_thought}</p>
                                         )}
                                     </div>
                                 </div>

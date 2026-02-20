@@ -34,11 +34,11 @@ export default function SettingsPage() {
 
     return (
         <div className="settings-page animate-fade-in">
-            <h1 className="page-title">⚙️ Ajustes</h1>
+            <h1 className="page-title">Ajustes</h1>
 
             {/* Profile section */}
             <section className="settings-section glass-card">
-                <h2 className="section-title">👤 Perfil</h2>
+                <h2 className="section-title">Perfil</h2>
                 <div className="settings-profile">
                     <div className="profile-avatar">
                         {(user?.displayName || user?.username || '?')[0].toUpperCase()}
@@ -53,7 +53,7 @@ export default function SettingsPage() {
 
             {/* AI Configuration */}
             <section className="settings-section glass-card">
-                <h2 className="section-title">🤖 Configuración de IA</h2>
+                <h2 className="section-title">Configuración de IA</h2>
                 <p className="section-desc">
                     Configura tu clave de API para usar el análisis con Inteligencia Artificial.
                     Tu clave se almacena de forma segura en el servidor local.
@@ -65,19 +65,19 @@ export default function SettingsPage() {
                         <div className="provider-selector">
                             <button className={`provider-btn ${provider === 'openai' ? 'provider-btn--active' : ''}`}
                                 onClick={() => setProvider('openai')}>
-                                <span className="provider-icon">🟢</span> OpenAI
+                                <span className="provider-dot" style={{ background: '#10B981' }}></span> OpenAI
                             </button>
                             <button className={`provider-btn ${provider === 'gemini' ? 'provider-btn--active' : ''}`}
                                 onClick={() => setProvider('gemini')}>
-                                <span className="provider-icon">🔵</span> Google Gemini
+                                <span className="provider-dot" style={{ background: '#3B82F6' }}></span> Google Gemini
                             </button>
                             <button className={`provider-btn ${provider === 'claude' ? 'provider-btn--active' : ''}`}
                                 onClick={() => setProvider('claude')}>
-                                <span className="provider-icon">🟪</span> Claude
+                                <span className="provider-dot" style={{ background: '#8B5CF6' }}></span> Claude
                             </button>
                             <button className={`provider-btn ${provider === 'ollama' ? 'provider-btn--active' : ''}`}
                                 onClick={() => setProvider('ollama')}>
-                                <span className="provider-icon">🦙</span> Ollama (Local)
+                                <span className="provider-dot" style={{ background: '#F59E0B' }}></span> Ollama (Local)
                             </button>
                         </div>
                     </div>
@@ -98,8 +98,8 @@ export default function SettingsPage() {
                         </span>
                     </div>
 
-                    <button className="btn btn-primary" onClick={handleSaveAPI} disabled={(provider !== 'ollama' && !apiKey) || saving}>
-                        {saving ? '⏳ Guardando...' : '💾 Guardar configuración'}
+                    <button className="btn btn-warm" onClick={handleSaveAPI} disabled={(provider !== 'ollama' && !apiKey) || saving}>
+                        {saving ? 'Guardando...' : 'Guardar configuración'}
                     </button>
 
                     {message && <div className="settings-message animate-fade-in">{message}</div>}
@@ -108,7 +108,7 @@ export default function SettingsPage() {
 
             {/* Data Import/Export */}
             <section className="settings-section glass-card">
-                <h2 className="section-title">📦 Tus Datos Locales</h2>
+                <h2 className="section-title">Tus Datos Locales</h2>
                 <p className="section-desc">
                     Esta versión de la aplicación guarda todos tus registros y configuraciones localmente en tu navegador para proteger tu privacidad.
                     Si cambias de dispositivo o navegador, tus datos NO se sincronizarán automáticamente.
@@ -137,7 +137,7 @@ export default function SettingsPage() {
                             }}
                         />
                         <button className="btn btn-secondary" onClick={() => document.getElementById('import-file').click()}>
-                            📥 Seleccionar Archivo JSON
+                            Seleccionar Archivo JSON
                         </button>
                         <span className="input-hint">Sube un archivo JSON generado con la opción "Exportar JSON" de la página Análisis.</span>
                     </div>
@@ -146,7 +146,7 @@ export default function SettingsPage() {
 
             {/* About */}
             <section className="settings-section glass-card">
-                <h2 className="section-title">ℹ️ Acerca de</h2>
+                <h2 className="section-title">Acerca de</h2>
                 <div className="about-content">
                     <p>
                         <strong>Diario de Emociones</strong> es una herramienta basada en la <em>Terapia Cognitivo-Conductual (TCC)</em>
@@ -161,7 +161,7 @@ export default function SettingsPage() {
 
             {/* Logout */}
             <div className="settings-logout">
-                <button className="btn btn-danger" onClick={logout}>🚪 Cerrar Sesión</button>
+                <button className="btn btn-danger" onClick={logout}>Cambiar usuario</button>
             </div>
         </div>
     );

@@ -2,16 +2,17 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { entriesAPI } from '../services/api';
+import { IconNote, IconCalendar, IconFlame, IconHeart, IconLightbulb, IconSparkles, IconPencil } from '../components/icons/AppIcons';
 import EmotionConstellation from '../components/three/EmotionConstellation';
 import './DashboardPage.css';
 
 const GREETINGS = ['¡Hola', '¡Bienvenido', '¡Qué gusto verte'];
 const TIPS = [
-    '💡 Registrar tus pensamientos te ayuda a identificar patrones emocionales.',
-    '🧠 No se trata de "pensar en positivo", sino de pensar de forma realista.',
-    '⏱️ Dedica 15 minutos al día a reflexionar sobre tus emociones.',
-    '🌟 Cada registro te acerca más al autoconocimiento.',
-    '✨ La evidencia debe ser hechos, no otros sentimientos.',
+    'Registrar tus pensamientos te ayuda a identificar patrones emocionales.',
+    'No se trata de "pensar en positivo", sino de pensar de forma realista.',
+    'Dedica 15 minutos al día a reflexionar sobre tus emociones.',
+    'Cada registro te acerca más al autoconocimiento.',
+    'La evidencia debe ser hechos, no otros sentimientos.',
 ];
 
 export default function DashboardPage() {
@@ -84,14 +85,14 @@ export default function DashboardPage() {
                         {new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                     </p>
                 </div>
-                <button className="btn btn-warm btn-lg" onClick={() => navigate('/new-entry')} style={{ borderRadius: 'var(--radius-full)' }}>
-                    <span>✨ Nueva Reflexión</span>
+                <button className="btn btn-warm btn-lg" onClick={() => navigate('/new-entry')}>
+                    <IconPencil size={18} color="white" /> Nueva Reflexión
                 </button>
             </header>
 
             {/* Tip Banner */}
             <div className="tip-card glass-card">
-                <div className="tip-icon">💡</div>
+                <div className="tip-icon"><IconLightbulb size={24} color="var(--primary-500)" /></div>
                 <div className="tip-content">
                     <h3 className="tip-title">Consejo del día</h3>
                     <p>{tip}</p>
@@ -101,22 +102,22 @@ export default function DashboardPage() {
             {/* Stats Grid */}
             <div className="stats-grid">
                 <div className="stat-card glass-card">
-                    <span className="stat-icon">📝</span>
+                    <span className="stat-icon"><IconNote size={28} color="var(--primary-400)" /></span>
                     <span className="stat-value">{stats.total}</span>
                     <span className="stat-label">Registros</span>
                 </div>
                 <div className="stat-card glass-card">
-                    <span className="stat-icon">📅</span>
+                    <span className="stat-icon"><IconCalendar size={28} color="var(--warm-400)" /></span>
                     <span className="stat-value">{stats.thisMonth}</span>
                     <span className="stat-label">Este mes</span>
                 </div>
                 <div className="stat-card glass-card">
-                    <span className="stat-icon">🔥</span>
+                    <span className="stat-icon"><IconFlame size={28} color="var(--emotion-anger)" /></span>
                     <span className="stat-value">{stats.streak}</span>
                     <span className="stat-label">Días seguidos</span>
                 </div>
                 <div className="stat-card glass-card">
-                    <span className="stat-icon">💓</span>
+                    <span className="stat-icon"><IconHeart size={28} color="var(--emotion-love)" /></span>
                     <span className="stat-value">{stats.avgIntensity}%</span>
                     <span className="stat-label">Intensidad Prom.</span>
                 </div>
@@ -124,7 +125,7 @@ export default function DashboardPage() {
 
             {/* Constellation */}
             <section className="dashboard-section">
-                <h2 className="section-title">✨ Tu Constelación Emocional</h2>
+                <h2 className="section-title">Tu Constelación Emocional</h2>
                 <p className="section-desc">Cada estrella es un registro. Explora tu universo emocional en 3D.</p>
                 <EmotionConstellation entries={entries} onEntryClick={(e) => navigate('/calendar')} />
             </section>
@@ -132,7 +133,7 @@ export default function DashboardPage() {
             {/* Recent entries */}
             <section className="dashboard-section">
                 <div className="section-header">
-                    <h2 className="section-title">📋 Registros Recientes</h2>
+                    <h2 className="section-title">Registros Recientes</h2>
                     <button className="btn btn-ghost btn-sm" onClick={() => navigate('/calendar')}>Ver todos →</button>
                 </div>
                 {loading ? (

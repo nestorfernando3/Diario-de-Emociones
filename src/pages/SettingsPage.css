@@ -88,8 +88,16 @@
 .provider-btn--active {
     background: rgba(99, 102, 241, 0.15);
     border-color: var(--primary-400);
-    color: var(--primary-300);
+    color: var(--primary-600);
     box-shadow: 0 0 10px rgba(99, 102, 241, 0.15);
+}
+
+.provider-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
 }
 
 .key-status {
