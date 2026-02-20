@@ -1,50 +1,60 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { authAPI } from '../services/api';
 
 const AuthContext = createContext(null);
 
+const STORAGE_KEY_PROFILE = 'diario_profile';
+
+function loadProfile() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY_PROFILE);
+        return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+}
+
+function saveProfile(profile) {
+    localStorage.setItem(STORAGE_KEY_PROFILE, JSON.stringify(profile));
+}
+
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
-    const [token, setToken] = useState(() => localStorage.getItem('diario_token'));
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (token) {
-            authAPI.me()
-                .then(u => { setUser(u); setLoading(false); })
-                .catch(() => { logout(); setLoading(false); });
-        } else {
-            setLoading(false);
+        const profile = loadProfile();
+        if (profile) {
+            // Restore the user id in localStorage so entriesAPI works correctly
+            localStorage.setItem('diario_current_user_id', profile.id);
+            setUser(profile);
         }
-    }, [token]);
-
-    const login = useCallback(async (credentials) => {
-        const { user: u, token: t } = await authAPI.login(credentials);
-        localStorage.setItem('diario_token', t);
-        localStorage.setItem('diario_user', JSON.stringify(u));
-        setToken(t);
-        setUser(u);
-        return u;
+        setLoading(false);
     }, []);
 
-    const register = useCallback(async (data) => {
-        const { user: u, token: t } = await authAPI.register(data);
-        localStorage.setItem('diario_token', t);
-        localStorage.setItem('diario_user', JSON.stringify(u));
-        setToken(t);
-        setUser(u);
-        return u;
+    // "login" now just means: save a local profile name (no password)
+    const login = useCallback(async ({ displayName }) => {
+        const profile = {
+            id: 'local-user',
+            username: displayName || 'Usuario',
+            displayName: displayName || 'Usuario',
+            createdAt: new Date().toISOString()
+        };
+        saveProfile(profile);
+        localStorage.setItem('diario_current_user_id', profile.id);
+        const users = JSON.parse(localStorage.getItem('diario_users') || '[]');
+        if (!users.find(u => u.id === profile.id)) {
+            users.push(profile);
+            localStorage.setItem('diario_users', JSON.stringify(users));
+        }
+        setUser(profile);
+        return profile;
     }, []);
 
     const logout = useCallback(() => {
-        localStorage.removeItem('diario_token');
-        localStorage.removeItem('diario_user');
-        setToken(null);
+        localStorage.removeItem(STORAGE_KEY_PROFILE);
         setUser(null);
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, token, loading, login, register, logout, isAuthenticated: !!user }}>
+        <AuthContext.Provider value={{ user, loading, login, logout, isAuthenticated: !!user }}>
             {children}
         </AuthContext.Provider>
     );

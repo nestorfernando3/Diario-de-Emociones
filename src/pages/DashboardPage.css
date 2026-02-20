@@ -171,7 +171,7 @@
 .intensity-bar {
     flex: 1;
     height: 4px;
-    background: var(--gray-700);
+    background: var(--gray-200);
     border-radius: var(--radius-full);
     overflow: hidden;
 }
