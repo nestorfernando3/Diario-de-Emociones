@@ -44,20 +44,19 @@ npm run dev
 
 La aplicación web estará disponible en <http://localhost:5173>
 
-## 🌐 Despliegue (GitHub Pages)
+## 🌐 Despliegue con 1 Clic (Recomendado)
 
-Esta aplicación ha sido diseñada como una **Local WebApp (100% Frontend)**. Esto significa que **no utiliza un servidor backend**. Todos tus registros emocionales y la configuración de IA se almacenan localmente en tu navegador usando `localStorage`. ¡La máxima privacidad!
+Esta aplicación ha sido diseñada como una **Local WebApp (100% Frontend)**. Todos tus registros emocionales y la configuración de IA se almacenan localmente en tu navegador usando `localStorage`. ¡La máxima privacidad!
 
-### Desplegar gratis en GitHub Pages
+### Desplegar instantáneamente en Vercel
 
-1. Sube este proyecto a tu propio repositorio en GitHub.
-2. Ve a la pestaña **Settings** > **Pages** de tu repositorio.
-3. Bajo "Build and deployment", selecciona "GitHub Actions".
-4. GitHub detectará automáticamente que es un proyecto Vite/React y te sugerirá el flujo de trabajo (`.yml`) para compilar y publicar el sitio usando Node.js.
-5. Haz clic en "Configure" y haz commit al archivo sugerido.
-6. En un par de minutos, tu aplicación estará en vivo y disponible en una URL como `https://tu-usuario.github.io/Diario-de-Emociones/`.
+La forma más rápida de tener tu aplicación en vivo en Internet, de forma gratuita y sin configurar servidores es usando Vercel. Haz clic en el siguiente botón:
 
-*(Nota: Asegúrate de configurar la propiedad `base` en `vite.config.js` si vas a utilizar un subdirectorio en GitHub pages, por ej: `base: '/Diario-de-Emociones/'`.)*
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2A%2Agithub.com%2Fnestorfernando3%2FDiario-de-Emociones)
+
+1. Vercel te pedirá iniciar sesión con GitHub.
+2. Automáticamente clonará este proyecto en tu cuenta y lo subirá a Internet.
+3. En menos de 1 minuto, te entregará un enlace público listo para usar desde cualquier dispositivo (por ejemplo, `diario-de-emociones.vercel.app`).
 
 ## 📝 Configuración de IA Avanzada
 
