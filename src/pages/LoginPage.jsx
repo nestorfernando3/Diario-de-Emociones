@@ -26,12 +26,12 @@ export default function LoginPage() {
     return (
         <div className="login-page">
             <div className="login-content">
-                <div className="login-illustration-container">
+                <div className="login-illustration-container liquid-shape">
                     <img src="/welcome_illustration.png" alt="Persona meditando" className="login-illustration" />
                 </div>
 
                 <div className="login-text-container">
-                    <img src="/app_logo.png" alt="Logo" className="login-logo-img" />
+                    <img src="/app_logo.png" alt="Logo" className="login-logo-img liquid-shape" />
                     <h1 className="login-title">Diario de Emociones</h1>
                     <p className="login-subtitle">Tu espacio sagrado para reflexionar, soltar y crecer.</p>
 
@@ -49,7 +49,7 @@ export default function LoginPage() {
                         </div>
 
                         <button
-                            className="btn btn-warm btn-full btn-lg login-btn"
+                            className="btn btn-warm btn-full btn-lg login-btn liquid-btn"
                             type="submit"
                             disabled={!name.trim() || loading}
                         >

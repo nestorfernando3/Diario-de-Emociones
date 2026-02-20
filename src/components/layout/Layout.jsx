@@ -35,7 +35,7 @@ export default function Layout() {
 
                 <div className="sidebar-footer">
                     <div className="sidebar-user">
-                        <div className="sidebar-user-avatar">
+                        <div className="sidebar-user-avatar liquid-shape">
                             {(user?.displayName || user?.username || '?')[0].toUpperCase()}
                         </div>
                         <div className="sidebar-user-info">

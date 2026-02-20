@@ -44,30 +44,39 @@
   --gray-800: #292524;
   --gray-900: #1c1917;
 
-  /* === LIGHT THEME (default) === */
-  --bg-primary: #faf9f7;
-  --bg-secondary: #f3f2ef;
-  --bg-tertiary: #ede9e3;
-  --bg-card: #ffffff;
-  --bg-glass: rgba(255, 255, 255, 0.85);
-  --bg-glass-hover: rgba(255, 255, 255, 0.95);
-  --border-glass: rgba(0, 0, 0, 0.06);
-  --border-glass-hover: rgba(0, 0, 0, 0.1);
+  /* ==== LIGHT THEME (default) === */
+  --bg-primary: #f0f4f8;
+  /* Softer blueish tint for water feel */
+  --bg-secondary: #e6eef5;
+  --bg-tertiary: #d9e6f2;
+  --bg-card: rgba(255, 255, 255, 0.45);
+  /* translucent */
+  --bg-glass: rgba(255, 255, 255, 0.65);
+  --bg-glass-hover: rgba(255, 255, 255, 0.85);
+  --border-glass: rgba(255, 255, 255, 0.6);
+  --border-glass-hover: rgba(255, 255, 255, 1);
 
   /* Text */
-  --text-primary: #1c1917;
-  --text-secondary: #57534e;
-  --text-muted: #a8a29e;
-  --text-accent: #6366f1;
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --text-accent: #3b82f6;
+  /* Water blue */
   --text-on-primary: #ffffff;
 
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-  --gradient-warm: linear-gradient(135deg, #f97316 0%, #ec4899 100%);
-  --gradient-hero: linear-gradient(160deg, #f0e7ff 0%, #fce7f3 40%, #fef3c7 100%);
-  --gradient-card: linear-gradient(145deg, #ffffff, #f9f7ff);
-  --gradient-soft: linear-gradient(135deg, #e0e7ff 0%, #fce7f3 100%);
-  --gradient-bg: linear-gradient(180deg, #faf9f7 0%, #f0edf8 100%);
+  --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+  /* Ocean gradient */
+  --gradient-warm: linear-gradient(135deg, #0ea5e9 0%, #10b981 100%);
+  /* Minty water */
+  --gradient-hero: linear-gradient(160deg, #e0f2fe 0%, #cffafe 40%, #f0f9ff 100%);
+  --gradient-card: linear-gradient(145deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.3));
+  --gradient-soft: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
+
+  /* Background fluid gradient moving colors */
+  --gradient-bg-1: #e0f2fe;
+  --gradient-bg-2: #bae6fd;
+  --gradient-bg-3: #ddd6fe;
 
   /* Shadows (softer, warmer) */
   --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.06);
@@ -109,10 +118,10 @@
   --font-size-5xl: 3.25rem;
 
   /* Transitions */
-  --transition-fast: 150ms ease;
-  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-fast: 200ms cubic-bezier(0.25, 0.8, 0.25, 1);
+  --transition-normal: 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
+  --transition-slow: 700ms cubic-bezier(0.25, 0.8, 0.25, 1);
+  --transition-spring: 600ms cubic-bezier(0.34, 1.56, 0.64, 1);
 
   /* Z-index */
   --z-base: 0;

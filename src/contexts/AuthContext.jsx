@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { syncAPI } from '../services/syncAPI';
 
 const AuthContext = createContext(null);
 
@@ -20,13 +21,26 @@ export function AuthProvider({ children }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const profile = loadProfile();
-        if (profile) {
-            // Restore the user id in localStorage so entriesAPI works correctly
-            localStorage.setItem('diario_current_user_id', profile.id);
-            setUser(profile);
+        async function initialize() {
+            setLoading(true);
+            const syncKey = localStorage.getItem('diario_sync_key');
+            if (syncKey) {
+                try {
+                    // Descarga silenciosa en segundo plano al iniciar
+                    await syncAPI.download(syncKey);
+                } catch (e) {
+                    console.error("Error auto-syncing on boot", e);
+                }
+            }
+
+            const profile = loadProfile();
+            if (profile) {
+                localStorage.setItem('diario_current_user_id', profile.id);
+                setUser(profile);
+            }
+            setLoading(false);
         }
-        setLoading(false);
+        initialize();
     }, []);
 
     // "login" now just means: save a local profile name (no password)

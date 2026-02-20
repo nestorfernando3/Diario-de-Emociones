@@ -47,7 +47,7 @@ Transformación visual profunda de la aplicación, inspirada en estéticas de we
 
 ## [1.0.0] - 2026-02-20
 
-### Añadido
+### Funciones base en lanzamiento inicial
 
 - **Autenticación local**: Sistema rápido de registro basado en nombre, almacenado en `localStorage`.
 - **Registro de Emociones Guiado**: Formulario de 7 columnas basado en TCC.

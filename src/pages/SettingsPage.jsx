@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { aiAPI } from '../services/api';
+import { syncAPI } from '../services/syncAPI';
 import './SettingsPage.css';
 
 export default function SettingsPage() {
@@ -10,12 +11,21 @@ export default function SettingsPage() {
     const [hasKey, setHasKey] = useState(false);
     const [saving, setSaving] = useState(false);
     const [message, setMessage] = useState('');
+    const [syncKey, setSyncKey] = useState('');
+    const [syncing, setSyncing] = useState(false);
+    const [isConnected, setIsConnected] = useState(false);
 
     useEffect(() => {
         aiAPI.getConfig().then(config => {
             setProvider(config.provider || 'openai');
             setHasKey(config.hasKey);
         }).catch(() => { });
+
+        const storedKey = localStorage.getItem('diario_sync_key');
+        if (storedKey) {
+            setSyncKey(storedKey);
+            setIsConnected(true);
+        }
     }, []);
 
     async function handleSaveAPI() {
@@ -30,6 +40,48 @@ export default function SettingsPage() {
             setMessage('❌ Error: ' + err.message);
         }
         setSaving(false);
+    }
+
+    async function handleConnect() {
+        if (!syncKey) {
+            setMessage('❌ Por favor, ingresa una llave para conectarte.');
+            return;
+        }
+        setSyncing(true);
+        setMessage('');
+        try {
+            await syncAPI.download(syncKey);
+            localStorage.setItem('diario_sync_key', syncKey);
+            setIsConnected(true);
+            setMessage('✅ Conectado a la nube. Datos sincronizados correctamente. Recargando...');
+            setTimeout(() => window.location.reload(), 1500);
+        } catch (err) {
+            setMessage('❌ Error al conectar: ' + err.message);
+        }
+        setSyncing(false);
+    }
+
+    async function handleSetupNewSync() {
+        setSyncing(true);
+        setMessage('');
+        try {
+            // Se asume que no hay llave previa; upload genera una nueva
+            const newKey = await syncAPI.upload(null);
+            setSyncKey(newKey);
+            localStorage.setItem('diario_sync_key', newKey);
+            setIsConnected(true);
+            setMessage('✅ Nube enlazada. Guarda esta nueva llave maestra en un lugar seguro.');
+        } catch (err) {
+            setMessage('❌ Error al crear enlace: ' + err.message);
+        }
+        setSyncing(false);
+    }
+
+    function handleDisconnect() {
+        localStorage.removeItem('diario_sync_key');
+        setIsConnected(false);
+        setSyncKey('');
+        setMessage('ℹ️ Desconectado de la nube. Tus datos ahora solo se guardan en este dispositivo.');
     }
 
     return (
@@ -98,11 +150,57 @@ export default function SettingsPage() {
                         </span>
                     </div>
 
-                    <button className="btn btn-warm" onClick={handleSaveAPI} disabled={(provider !== 'ollama' && !apiKey) || saving}>
+                    <button className="btn btn-warm liquid-btn" onClick={handleSaveAPI} disabled={(provider !== 'ollama' && !apiKey) || saving}>
                         {saving ? 'Guardando...' : 'Guardar configuración'}
                     </button>
 
                     {message && <div className="settings-message animate-fade-in">{message}</div>}
+                </div>
+            </section>
+
+            {/* Sync Section */}
+            <section className="settings-section glass-card">
+                <h2 className="section-title">
+                    Sincronización en la Nube {isConnected && <span className="key-status" style={{ color: '#10B981' }}>● En línea</span>}
+                </h2>
+                <p className="section-desc">
+                    Mantén tus datos respaldados y sincronizados entre dispositivos. Tus datos se encriptan de forma segura en tu dispositivo (AES-256-GCM) y se guardan en internet anónimamente, por lo que nadie más puede leerlos.
+                </p>
+                <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem', flexDirection: 'column' }}>
+
+                    {isConnected ? (
+                        <div className="input-group">
+                            <label className="input-label">Tu Llave Maestra Actual</label>
+                            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                <input type="text" className="input-field" style={{ flex: 1, minWidth: '200px', cursor: 'pointer', background: 'var(--bg-card)', color: 'var(--text-muted)' }}
+                                    readOnly value={syncKey} onClick={e => e.target.select()} title="Haz clic para seleccionar y copiar" />
+                                <button className="btn btn-secondary" onClick={handleDisconnect} disabled={syncing}>
+                                    Desconectar
+                                </button>
+                            </div>
+                            <span className="input-hint">
+                                Esta aplicación está guardando automáticamente en internet todos los cambios que haces en tu diario usando esta llave. Cópiala y úsala en otros dispositivos para mantenerlos en sincronía.
+                            </span>
+                        </div>
+                    ) : (
+                        <div className="input-group">
+                            <label className="input-label">Conectar a la Nube (Ingresa tu Llave O genera una nueva)</label>
+                            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                <input type="text" className="input-field" style={{ flex: 1, minWidth: '200px' }}
+                                    placeholder="Ej: 123456... @ a1b2c3..."
+                                    value={syncKey} onChange={e => setSyncKey(e.target.value)} />
+                                <button className="btn btn-primary liquid-btn" onClick={handleConnect} disabled={syncing || !syncKey}>
+                                    {syncing ? 'Conectando...' : 'Conectar Llave'}
+                                </button>
+                                <button className="btn btn-warm liquid-btn" onClick={handleSetupNewSync} disabled={syncing}>
+                                    {syncing ? 'Generando...' : 'Crear Llave Nueva'}
+                                </button>
+                            </div>
+                            <span className="input-hint">
+                                Si ya tienes una llave de otro dispositivo, pégala aquí y haz clic en "Conectar Llave". Si no tienes una, haz clic en "Crear Llave Nueva" para respaldar tus datos actuales.
+                            </span>
+                        </div>
+                    )}
                 </div>
             </section>
 

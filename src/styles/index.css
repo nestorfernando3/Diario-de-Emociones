@@ -26,7 +26,9 @@ body {
     line-height: 1.65;
     min-height: 100vh;
     overflow-x: hidden;
-    background-image: var(--gradient-bg);
+    background: linear-gradient(-45deg, var(--gradient-bg-1), var(--gradient-bg-2), var(--gradient-bg-3), var(--bg-primary));
+    background-size: 400% 400%;
+    animation: gradientFlow 15s ease infinite;
 }
 
 #root {
@@ -79,12 +81,15 @@ h6 {
     border: 1px solid var(--border-glass);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     transition: all var(--transition-normal);
 }
 
 .glass-card:hover {
     box-shadow: var(--shadow-md);
     border-color: var(--border-glass-hover);
+    transform: translateY(-2px);
 }
 
 /* === BUTTONS === */
@@ -120,6 +125,29 @@ h6 {
     transform: translateY(0);
 }
 
+.liquid-btn {
+    position: relative;
+    overflow: hidden;
+    border-radius: 40px;
+    z-index: 1;
+}
+
+.liquid-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 300%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease-in-out;
+    z-index: -1;
+}
+
+.liquid-btn:hover::before {
+    left: 100%;
+}
+
 .btn-secondary {
     background: var(--bg-secondary);
     color: var(--text-secondary);
@@ -137,8 +165,9 @@ h6 {
 }
 
 .btn-ghost:hover {
-    color: var(--text-primary);
-    background: var(--bg-secondary);
+    color: var(--text-accent);
+    background: var(--bg-glass);
+    backdrop-filter: blur(8px);
 }
 
 .btn-danger {
@@ -339,6 +368,18 @@ input[type="range"]::-webkit-slider-thumb:hover {
     color: var(--text-secondary);
     line-height: 1.7;
     margin-bottom: var(--space-md);
+}
+
+/* === WATER / LIQUID UTILS === */
+.liquid-shape {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    animation: liquidMorph 8s ease-in-out infinite;
+    transition: all var(--transition-normal);
+}
+
+.liquid-shape:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.2);
 }
 
 /* === Responsive === */

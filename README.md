@@ -71,7 +71,7 @@ Esta es una **aplicación 100% frontend**. Todos los datos se almacenan localmen
 
 ## Estructura del Proyecto
 
-```
+```text
 src/
 ├── components/
 │   ├── icons/          # Sistema de iconos SVG (AppIcons.jsx)

@@ -1,10 +1,25 @@
 // Simulate a delay to feel like a real API
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+import { syncAPI } from './syncAPI';
+
 const STORAGE_KEY_USERS = 'diario_users';
 const STORAGE_KEY_ENTRIES = 'diario_entries';
 const STORAGE_KEY_AI_CONFIG = 'diario_ai_config';
 const STORAGE_KEY_CURRENT_USER = 'diario_current_user_id';
+const STORAGE_KEY_SYNC = 'diario_sync_key';
+
+// Background sync trigger
+const triggerSync = async () => {
+    const syncKey = localStorage.getItem(STORAGE_KEY_SYNC);
+    if (syncKey) {
+        try {
+            await syncAPI.upload(syncKey);
+        } catch (e) {
+            console.error("Auto-sync failed:", e);
+        }
+    }
+};
 
 // Helper to get/set local storage data safely
 const getStorage = (key, defaultVal = []) => {
@@ -101,6 +116,7 @@ export const entriesAPI = {
         };
         entries.push(newEntry);
         setStorage(STORAGE_KEY_ENTRIES, entries);
+        triggerSync();
         return newEntry;
     },
     update: async (id, data) => {
@@ -115,6 +131,7 @@ export const entriesAPI = {
             entries[idx].tags = JSON.stringify(data.tags);
         }
         setStorage(STORAGE_KEY_ENTRIES, entries);
+        triggerSync();
         return entries[idx];
     },
     delete: async (id) => {
@@ -125,6 +142,7 @@ export const entriesAPI = {
         entries = entries.filter(e => !(e.id === id && e.userId === userId));
         if (entries.length === initialLen) throw new Error('Registro no encontrado');
         setStorage(STORAGE_KEY_ENTRIES, entries);
+        triggerSync();
         return { message: 'Eliminado correctamente' };
     },
     export: async (params = {}) => {
@@ -143,6 +161,7 @@ export const entriesAPI = {
         }));
 
         setStorage(STORAGE_KEY_ENTRIES, [...entries, ...imported]);
+        triggerSync();
         return imported.length;
     }
 };
@@ -167,6 +186,7 @@ export const aiAPI = {
             provider: data.apiProvider || 'openai'
         };
         setStorage(STORAGE_KEY_AI_CONFIG, configs);
+        triggerSync();
         return { message: 'Configuración guardada' };
     },
     analyze: async (data) => {
