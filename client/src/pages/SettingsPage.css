@@ -1,0 +1,125 @@
+.settings-page {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.settings-section {
+    padding: var(--space-xl);
+    margin-bottom: var(--space-lg);
+}
+
+.section-desc {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    margin-bottom: var(--space-lg);
+    line-height: 1.6;
+}
+
+/* Profile */
+.settings-profile {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+}
+
+.profile-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-full);
+    background: var(--gradient-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-2xl);
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+.profile-name {
+    font-weight: 600;
+    font-size: var(--font-size-lg);
+}
+
+.profile-email {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+.profile-joined {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+/* AI Config */
+.ai-config {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.provider-selector {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+.provider-btn {
+    flex: 1;
+    padding: var(--space-md) var(--space-lg);
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.provider-btn:hover {
+    background: var(--bg-glass-hover);
+}
+
+.provider-btn--active {
+    background: rgba(99, 102, 241, 0.15);
+    border-color: var(--primary-400);
+    color: var(--primary-300);
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.15);
+}
+
+.key-status {
+    font-size: var(--font-size-xs);
+    margin-left: var(--space-sm);
+    font-weight: 400;
+}
+
+.input-hint {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+}
+
+.settings-message {
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
+}
+
+/* About */
+.about-content p {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+
+/* Logout */
+.settings-logout {
+    text-align: center;
+    margin-top: var(--space-xl);
+}
