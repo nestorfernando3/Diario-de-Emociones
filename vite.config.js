@@ -7,5 +7,8 @@ export default defineConfig({
         port: 5173
     },
     // Set base path to relative for GitHub Pages compatibility if needed
-    base: './'
+    base: './',
+    build: {
+        chunkSizeWarningLimit: 2000
+    }
 })
