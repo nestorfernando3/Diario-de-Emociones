@@ -11,16 +11,13 @@ Diario de Emociones es una aplicación web interactiva y visualmente atractiva b
   - Google Gemini (Gemini 2.0 Flash)
   - Anthropic Claude (Claude 3.5 Sonnet)
   - Ollama (Modelos locales como Llama 3, totalmente privados)
-- **Privacidad Local**: Todos tus registros se almacenan en una base de datos SQLite local dentro de la arquitectura del servidor.
-- **Exportación de Datos**: Descarga tus registros cronológicos en formato JSON o CSV.
-- **Seguridad**: Autenticación mediante JWT y contraseñas cifradas.
+- **Privacidad Local**: Todos tus registros se almacenan en tu propio navegador (`localStorage`).
+- **Exportación de Datos e Importación**: Descarga tus registros en JSON/CSV, o importa tus datos JSON para restaurarlos en otro dispositivo.
 
 ## 🚀 Tecnologías
 
 - **Frontend**: React 18, Vite, Three.js, React Three Fiber, React Router.
-- **Backend**: Node.js, Express.js.
-- **Base de Datos**: SQLite (procesada nativamente con sql.js).
-- **Autenticación**: JSON Web Tokens (JWT), bcryptjs.
+- **Base de Datos**: Ninguna externa (`localStorage`).
 
 ## 📋 Instalación y Uso Local
 
@@ -36,36 +33,31 @@ git clone https://github.com/tu-usuario/Diario-de-Emociones.git
 cd Diario-de-Emociones
 ```
 
-### 2. Iniciar el Backend (Servidor)
+### 2. Iniciar la aplicación
+
+Instala las dependencias y arranca el servidor de desarrollo de Vite:
 
 ```bash
-cd server
-npm install
-npm start
-```
-
-El servidor se ejecutará en <http://localhost:3001>
-
-### 3. Iniciar el Frontend (Cliente)
-
-En una nueva terminal:
-
-```bash
-cd client
 npm install
 npm run dev
 ```
 
 La aplicación web estará disponible en <http://localhost:5173>
 
-## 🌐 Despliegue (Web App)
+## 🌐 Despliegue (GitHub Pages)
 
-Al ser una aplicación Full-Stack con base de datos en archivo local (`sql.js`), no se puede desplegar el servidor en plataformas de sitios estáticos (como GitHub Pages).
+Esta aplicación ha sido diseñada como una **Local WebApp (100% Frontend)**. Esto significa que **no utiliza un servidor backend**. Todos tus registros emocionales y la configuración de IA se almacenan localmente en tu navegador usando `localStorage`. ¡La máxima privacidad!
 
-Para desplegar este proyecto en producción:
+### Desplegar gratis en GitHub Pages
 
-1. **Frontend**: Puedes compilar tu cliente con `npm run build` en el directorio `/client` y desplegar el directorio resultante `dist` en GitHub Pages, Vercel o Netlify. Deberás configurar la variable de entorno para que las dependencias de red apunten a tu servidor backend de producción.
-2. **Backend**: Puedes desplegar el directorio `/server` en servicios de hosting Node.js (como Render, Railway, DigitalOcean o Heroku). Recuerda configurar un "volume" o disco persistente para almacenar los archivos del esquema de la base de datos local y evitar pérdida de información en reinicios.
+1. Sube este proyecto a tu propio repositorio en GitHub.
+2. Ve a la pestaña **Settings** > **Pages** de tu repositorio.
+3. Bajo "Build and deployment", selecciona "GitHub Actions".
+4. GitHub detectará automáticamente que es un proyecto Vite/React y te sugerirá el flujo de trabajo (`.yml`) para compilar y publicar el sitio usando Node.js.
+5. Haz clic en "Configure" y haz commit al archivo sugerido.
+6. En un par de minutos, tu aplicación estará en vivo y disponible en una URL como `https://tu-usuario.github.io/Diario-de-Emociones/`.
+
+*(Nota: Asegúrate de configurar la propiedad `base` en `vite.config.js` si vas a utilizar un subdirectorio en GitHub pages, por ej: `base: '/Diario-de-Emociones/'`.)*
 
 ## 📝 Configuración de IA Avanzada
 
