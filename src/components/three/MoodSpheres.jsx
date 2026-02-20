@@ -50,10 +50,9 @@ function EmotionSphere({ emotion, onSelect, isSelected }) {
                     <Text
                         position={[0, -0.8, 0]}
                         fontSize={0.2}
-                        color="white"
+                        color="var(--text-primary)"
                         anchorX="center"
                         anchorY="middle"
-                        font="https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMa2JL7.woff2"
                     >
                         {emotion.name}
                     </Text>

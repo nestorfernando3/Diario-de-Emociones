@@ -87,11 +87,11 @@ export const entriesAPI = {
         let entries = getStorage(STORAGE_KEY_ENTRIES).filter(e => e.userId === userId);
 
         if (params.startDate && params.endDate) {
-            entries = entries.filter(e => e.entry_date >= params.startDate && e.entry_date <= params.endDate);
+            entries = entries.filter(e => e.entryDate >= params.startDate && e.entryDate <= params.endDate);
         }
 
         // Sort by date descending
-        return entries.sort((a, b) => new Date(b.entry_date) - new Date(a.entry_date));
+        return entries.sort((a, b) => new Date(b.entryDate) - new Date(a.entryDate));
     },
     get: async (id) => {
         await delay(100);
@@ -204,7 +204,7 @@ export const aiAPI = {
         }
 
         const entriesText = entries.map(e =>
-            `Fecha: ${e.entry_date}\nSituación: ${e.situation}\nSentimiento: ${e.feeling} (${e.feeling_intensity}%)\nPensamiento automático: ${e.automatic_thought}\nEvidencia a favor: ${e.evidence_for}\nEvidencia en contra: ${e.evidence_against}\nPensamiento alternativo: ${e.alternative_thought}\nRecalificación: ${e.re_rating}%`
+            `Fecha: ${e.entryDate}\nSituación: ${e.situation}\nSentimiento: ${e.feeling} (${e.feelingIntensity}%)\nPensamiento automático: ${e.automaticThought}\nEvidencia a favor: ${e.evidenceFor}\nEvidencia en contra: ${e.evidenceAgainst}\nPensamiento alternativo: ${e.alternativeThought}\nRecalificación: ${e.reRating}%`
         ).join('\n---\n');
 
         const systemPrompt = `Eres un psicólogo experto en Terapia Cognitivo-Conductual (TCC). Analiza los siguientes registros de pensamiento de 7 columnas del diario emocional de un paciente. 
@@ -287,7 +287,7 @@ Sé empático, constructivo y específico. Responde siempre en español.`;
             return {
                 analysis,
                 entriesAnalyzed: entries.length,
-                dateRange: { start: entries[entries.length - 1].entry_date, end: entries[0].entry_date }
+                dateRange: { start: entries[entries.length - 1].entryDate, end: entries[0].entryDate }
             };
 
         } catch (err) {

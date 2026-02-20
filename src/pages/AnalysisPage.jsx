@@ -13,13 +13,20 @@ export default function AnalysisPage() {
 
     useEffect(() => {
         aiAPI.getConfig().then(setConfig).catch(() => { });
-        entriesAPI.list({}).then(e => setEntriesCount(e.length)).catch(() => { });
         // Set default date range to last 30 days
         const end = new Date();
         const start = new Date();
         start.setDate(start.getDate() - 30);
-        setStartDate(start.toISOString().split('T')[0]);
-        setEndDate(end.toISOString().split('T')[0]);
+
+        const endStr = end.toISOString().split('T')[0];
+        const startStr = start.toISOString().split('T')[0];
+
+        setStartDate(startStr);
+        setEndDate(endStr);
+
+        entriesAPI.list({ startDate: startStr, endDate: endStr })
+            .then(e => setEntriesCount(e.length))
+            .catch(() => { });
     }, []);
 
     async function handleAnalyze() {
@@ -94,16 +101,22 @@ export default function AnalysisPage() {
                 </div>
 
                 <div className="analysis-actions">
-                    <button className="btn btn-primary btn-lg" onClick={handleAnalyze}
-                        disabled={loading || !config.hasKey}>
+                    <button className="btn btn-primary btn-lg liquid-btn" onClick={handleAnalyze}
+                        disabled={loading || !config.hasKey || entriesCount === 0}>
                         {loading ? 'Analizando...' : 'Analizar mis emociones'}
                     </button>
                     <div className="export-buttons">
-                        <button className="btn btn-secondary btn-sm" onClick={() => handleExport('json')}>JSON</button>
-                        <button className="btn btn-secondary btn-sm" onClick={() => handleExport('csv')}>CSV</button>
+                        <button className="btn btn-secondary btn-sm" onClick={() => handleExport('json')} disabled={entriesCount === 0}>JSON</button>
+                        <button className="btn btn-secondary btn-sm" onClick={() => handleExport('csv')} disabled={entriesCount === 0}>CSV</button>
                     </div>
                 </div>
             </div>
+
+            {entriesCount === 0 && !loading && !result && (
+                <div className="analysis-empty glass-card animate-fade-in text-center" style={{ padding: '2rem', marginTop: '1rem', color: 'var(--text-muted)' }}>
+                    No hay registros para analizar en el rango de fechas seleccionado.
+                </div>
+            )}
 
             {error && <div className="analysis-error glass-card animate-fade-in">{error}</div>}
 
