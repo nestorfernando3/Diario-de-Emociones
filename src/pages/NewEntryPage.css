@@ -1,8 +1,8 @@
 .new-entry-page {
     max-width: 700px;
     margin: 0 auto;
-    padding-bottom: 100px;
-    /* Space for bottom nav */
+    padding-bottom: 120px;
+    /* Space for bottom nav and mobile floating bar */
 }
 
 /* Progress bar */
@@ -260,7 +260,8 @@
     border-top: 1px solid var(--border-glass);
     display: flex;
     justify-content: center;
-    z-index: 100;
+    z-index: 90;
+    /* Lower than Layout sidebar z-index (100) on mobile */
 }
 
 .wizard-next-btn {
@@ -278,6 +279,16 @@
 
     .wizard-step-body .input-field {
         font-size: var(--font-size-md);
+    }
+
+    .wizard-nav {
+        bottom: 80px;
+        /* Offset to not overlap the mobile navbar */
+        padding: var(--space-md);
+    }
+
+    .wizard-next-btn {
+        height: 50px;
     }
 
     .re-rating-comparison {

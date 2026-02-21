@@ -85,8 +85,8 @@ export const syncAPI = {
         // 2. Encrypt data
         const encryptedPayload = await syncAPI.encryptData(jsonString, password);
 
-        // 3. Upload to JSONBlob
-        const url = blobId ? `https://jsonblob.com/api/jsonBlob/${blobId}` : 'https://jsonblob.com/api/jsonBlob';
+        // 3. Upload to Jsonbox (Alternative online JSON storage with better CORS)
+        const url = blobId ? `https://jsonbox.io/${blobId}` : 'https://jsonbox.io/box_diarioemociones_' + Math.random().toString(36).substring(7);
         const method = blobId ? 'PUT' : 'POST';
 
         const response = await fetch(url, {
@@ -103,18 +103,16 @@ export const syncAPI = {
         }
 
         if (!blobId) {
-            const location = response.headers.get('Location');
-            if (location) {
-                const parts = location.split('/');
-                blobId = parts[parts.length - 1];
+            // Jsonbox returns an array or object containing the generated box id and record id
+            const resData = await response.json();
+            if (Array.isArray(resData)) {
+                blobId = 'box_diarioemociones_' + resData[0]._box_id + '/' + resData[0]._id;
+            } else if (resData._box_id) {
+                blobId = 'box_diarioemociones_' + resData._box_id + '/' + resData._id;
             } else {
-                // Sometime Location header is not exposed via CORS, fallback to reading x-jsonblob-id
-                blobId = response.headers.get('x-jsonblob-id');
+                // If the predefined URL worked, keep the suffix
+                blobId = url.split('jsonbox.io/')[1];
             }
-        }
-
-        if (!blobId) {
-            throw new Error('No se pudo obtener el ID del documento');
         }
 
         return `${blobId}@${password}`;
@@ -128,7 +126,7 @@ export const syncAPI = {
 
         const [blobId, password] = syncKey.split('@');
 
-        const response = await fetch(`https://jsonblob.com/api/jsonBlob/${blobId}`, {
+        const response = await fetch(`https://jsonbox.io/${blobId}`, {
             method: 'GET',
             headers: { 'Accept': 'application/json' }
         });
@@ -137,7 +135,11 @@ export const syncAPI = {
             throw new Error('No se encontró información para esta llave o el enlace expiró');
         }
 
-        const encryptedPayload = await response.json();
+        let encryptedPayload = await response.json();
+        if (Array.isArray(encryptedPayload)) {
+            encryptedPayload = encryptedPayload[0]; // Jsonbox returns arrays when querying boxes
+        }
+
         const jsonString = await syncAPI.decryptData(encryptedPayload, password);
 
         const dataObj = JSON.parse(jsonString);

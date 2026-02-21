@@ -147,6 +147,24 @@ export const entriesAPI = {
     },
     export: async (params = {}) => {
         const entries = await entriesAPI.list(params);
+        if (params.format === 'csv') {
+            if (entries.length === 0) return '';
+            // Create CSV header
+            const headers = ['Fecha', 'Situación', 'Sentimiento', 'Intensidad', 'Pensamiento Automático', 'Evidencia a Favor', 'Evidencia en Contra', 'Pensamiento Alternativo', 'Recalificación'];
+            const rows = entries.map(e => [
+                e.entryDate || '',
+                (e.situation || '').replace(/"/g, '""'),
+                e.feeling || '',
+                e.feelingIntensity || '',
+                (e.automaticThought || '').replace(/"/g, '""'),
+                (e.evidenceFor || '').replace(/"/g, '""'),
+                (e.evidenceAgainst || '').replace(/"/g, '""'),
+                (e.alternativeThought || '').replace(/"/g, '""'),
+                e.reRating || ''
+            ].map(col => `"${col}"`).join(','));
+
+            return [headers.join(','), ...rows].join('\n');
+        }
         return entries;
     },
     importMany: async (newEntries) => {
