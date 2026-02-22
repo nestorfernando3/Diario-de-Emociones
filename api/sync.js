@@ -12,11 +12,17 @@ export default async function handler(req, res) {
 
     const { action, blobId } = req.query;
 
+    console.log(`[Proxy Sync] Action: ${action}, BlobId: ${blobId}, Method: ${req.method}`);
+
     try {
         if (action === 'upload') {
             const isNew = !blobId || blobId === 'undefined' || blobId === 'null';
             const url = isNew ? 'https://jsonblob.com/api/jsonBlob' : `https://jsonblob.com/api/jsonBlob/${blobId}`;
             const method = isNew ? 'POST' : 'PUT';
+
+            // IMPORTANT: Vercel parses application/json automatically into req.body.
+            // When proxying to JSONBlob, we MUST re-stringify it.
+            const payload = typeof req.body === 'string' ? req.body : JSON.stringify(req.body || {});
 
             const response = await fetch(url, {
                 method,
@@ -24,11 +30,13 @@ export default async function handler(req, res) {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                body: JSON.stringify(req.body)
+                body: payload
             });
 
             if (!response.ok) {
-                throw new Error(`Cloud DB HTTP error: ${response.status}`);
+                const errText = await response.text();
+                console.error(`[Proxy Sync] Upstream error: ${response.status} ${errText}`);
+                throw new Error(`Cloud DB HTTP error: ${response.status} - ${errText}`);
             }
 
             let newBlobId = blobId;
