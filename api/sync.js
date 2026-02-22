@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-    // Enable CORS for local development if needed
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -17,12 +16,14 @@ export default async function handler(req, res) {
     try {
         if (action === 'upload') {
             const isNew = !blobId || blobId === 'undefined' || blobId === 'null';
-            const url = isNew ? 'https://jsonblob.com/api/jsonBlob' : `https://jsonblob.com/api/jsonBlob/${blobId}`;
+            const url = isNew ? 'https://api.restful-api.dev/objects' : `https://api.restful-api.dev/objects/${blobId}`;
             const method = isNew ? 'POST' : 'PUT';
 
-            // IMPORTANT: Vercel parses application/json automatically into req.body.
-            // When proxying to JSONBlob, we MUST re-stringify it.
-            const payload = typeof req.body === 'string' ? req.body : JSON.stringify(req.body || {});
+            // The free API expects a wrapper object payload: {"name": "diario", "data": {...}}
+            const cloudPayload = {
+                name: "diario_sync",
+                data: req.body
+            };
 
             const response = await fetch(url, {
                 method,
@@ -30,7 +31,7 @@ export default async function handler(req, res) {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                body: payload
+                body: JSON.stringify(cloudPayload)
             });
 
             if (!response.ok) {
@@ -39,16 +40,10 @@ export default async function handler(req, res) {
                 throw new Error(`Cloud DB HTTP error: ${response.status} - ${errText}`);
             }
 
-            let newBlobId = blobId;
-            if (isNew) {
-                const location = response.headers.get('Location');
-                if (location) {
-                    const parts = location.split('/');
-                    newBlobId = parts[parts.length - 1];
-                } else {
-                    newBlobId = response.headers.get('x-jsonblob-id');
-                }
-            }
+            const data = await response.json();
+
+            // Extract the ID returned by restful-api.dev
+            const newBlobId = data.id || blobId;
 
             if (!newBlobId) {
                 throw new Error('Failed to extract document ID from upstream');
@@ -61,7 +56,7 @@ export default async function handler(req, res) {
                 return res.status(400).json({ error: 'Missing blobId parameter' });
             }
 
-            const response = await fetch(`https://jsonblob.com/api/jsonBlob/${blobId}`, {
+            const response = await fetch(`https://api.restful-api.dev/objects/${blobId}`, {
                 headers: { 'Accept': 'application/json' }
             });
 
@@ -69,8 +64,14 @@ export default async function handler(req, res) {
                 throw new Error(`Cloud DB HTTP error: ${response.status}`);
             }
 
-            const data = await response.json();
-            return res.status(200).json(data);
+            // The API returns { id: "...", name: "diario_sync", data: { ... } }
+            const jsonRes = await response.json();
+
+            if (!jsonRes.data) {
+                throw new Error('El objeto retornado está vacío o corrupto');
+            }
+
+            return res.status(200).json(jsonRes.data);
         }
         else {
             return res.status(400).json({ error: 'Invalid action parameter. Must be upload or download.' });
