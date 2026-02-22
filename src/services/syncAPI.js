@@ -71,6 +71,7 @@ export const syncAPI = {
 
         const jsonString = JSON.stringify(dataToSync);
 
+        // 3. Upload to keyvalue.immanuel.co (Simple KV store with no CORS limits)
         let blobId = null;
         let password = null;
 
@@ -79,40 +80,28 @@ export const syncAPI = {
             blobId = parts[0];
             password = parts[1];
         } else {
+            // Generate a random ID (alphanumeric, short)
+            blobId = Math.random().toString(36).substring(2, 12);
             password = syncAPI.generatePassword();
         }
 
         // 2. Encrypt data
         const encryptedPayload = await syncAPI.encryptData(jsonString, password);
+        // The KV store expects a plain string, so we stringify the encrypted object
+        const payloadString = encodeURIComponent(JSON.stringify(encryptedPayload));
 
-        // 3. Upload to Jsonbox (Alternative online JSON storage with better CORS)
-        const url = blobId ? `https://jsonbox.io/${blobId}` : 'https://jsonbox.io/box_diarioemociones_' + Math.random().toString(36).substring(7);
-        const method = blobId ? 'PUT' : 'POST';
+        // POST /api/KeyVal/UpdateValue/{AppKey}/{val}
+        const url = `https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/${blobId}/${payloadString}`;
 
         const response = await fetch(url, {
-            method: method,
+            method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify(encryptedPayload)
+                'Content-Length': '0'
+            }
         });
 
         if (!response.ok) {
-            throw new Error('Error al subir los datos a la nube');
-        }
-
-        if (!blobId) {
-            // Jsonbox returns an array or object containing the generated box id and record id
-            const resData = await response.json();
-            if (Array.isArray(resData)) {
-                blobId = 'box_diarioemociones_' + resData[0]._box_id + '/' + resData[0]._id;
-            } else if (resData._box_id) {
-                blobId = 'box_diarioemociones_' + resData._box_id + '/' + resData._id;
-            } else {
-                // If the predefined URL worked, keep the suffix
-                blobId = url.split('jsonbox.io/')[1];
-            }
+            throw new Error('Error al subir los datos a la nube. Bloqueado por red local o firewall.');
         }
 
         return `${blobId}@${password}`;
@@ -126,19 +115,18 @@ export const syncAPI = {
 
         const [blobId, password] = syncKey.split('@');
 
-        const response = await fetch(`https://jsonbox.io/${blobId}`, {
-            method: 'GET',
-            headers: { 'Accept': 'application/json' }
+        const response = await fetch(`https://keyvalue.immanuel.co/api/KeyVal/GetValue/${blobId}`, {
+            method: 'GET'
         });
 
         if (!response.ok) {
             throw new Error('No se encontró información para esta llave o el enlace expiró');
         }
 
-        let encryptedPayload = await response.json();
-        if (Array.isArray(encryptedPayload)) {
-            encryptedPayload = encryptedPayload[0]; // Jsonbox returns arrays when querying boxes
-        }
+        const dataString = await response.json(); // API returns the string we sent in quotes
+        if (!dataString) throw new Error("Llave vacía o inválida");
+
+        const encryptedPayload = JSON.parse(decodeURIComponent(dataString));
 
         const jsonString = await syncAPI.decryptData(encryptedPayload, password);
 
