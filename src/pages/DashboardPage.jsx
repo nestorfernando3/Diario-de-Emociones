@@ -42,7 +42,7 @@ export default function DashboardPage() {
             // Calculate streak
             let streak = 0;
             const today = new Date().toISOString().split('T')[0];
-            const dates = [...new Set(allEntries.map(e => e.entry_date))].sort().reverse();
+            const dates = [...new Set(allEntries.map(e => e.entryDate))].sort().reverse();
             for (let i = 0; i < dates.length; i++) {
                 const expected = new Date();
                 expected.setDate(expected.getDate() - i);
@@ -53,7 +53,7 @@ export default function DashboardPage() {
 
             // Avg intensity
             const avgIntensity = allEntries.length > 0
-                ? Math.round(allEntries.reduce((a, e) => a + (e.feeling_intensity || 0), 0) / allEntries.length)
+                ? Math.round(allEntries.reduce((a, e) => a + (e.feelingIntensity || 0), 0) / allEntries.length)
                 : 0;
 
             setStats({
@@ -150,25 +150,25 @@ export default function DashboardPage() {
                     <div className="entries-list">
                         {recentEntries.map((entry, i) => (
                             <div key={entry.id} className="entry-card glass-card animate-fade-in-up" style={{ animationDelay: `${i * 80}ms` }}>
-                                <div className="entry-color-bar" style={{ background: EMOTION_COLORS[entry.feeling] || entry.mood_color }} />
+                                <div className="entry-color-bar" style={{ background: EMOTION_COLORS[entry.feeling] || entry.moodColor }} />
                                 <div className="entry-content">
                                     <div className="entry-top">
-                                        <span className="entry-feeling" style={{ color: EMOTION_COLORS[entry.feeling] || entry.mood_color }}>
+                                        <span className="entry-feeling" style={{ color: EMOTION_COLORS[entry.feeling] || entry.moodColor }}>
                                             {entry.feeling}
                                         </span>
-                                        <span className="entry-date">{entry.entry_date}</span>
+                                        <span className="entry-date">{entry.entryDate}</span>
                                     </div>
                                     <p className="entry-situation">{entry.situation}</p>
                                     <div className="entry-intensity">
                                         <div className="intensity-bar">
                                             <div className="intensity-fill" style={{
-                                                width: `${entry.feeling_intensity}%`,
-                                                background: EMOTION_COLORS[entry.feeling] || entry.mood_color
+                                                width: `${entry.feelingIntensity}%`,
+                                                background: EMOTION_COLORS[entry.feeling] || entry.moodColor
                                             }} />
                                         </div>
-                                        <span className="intensity-value">{entry.feeling_intensity}%</span>
-                                        {entry.re_rating != null && (
-                                            <span className="intensity-rerating">→ {entry.re_rating}%</span>
+                                        <span className="intensity-value">{entry.feelingIntensity}%</span>
+                                        {entry.reRating != null && (
+                                            <span className="intensity-rerating">→ {entry.reRating}%</span>
                                         )}
                                     </div>
                                 </div>

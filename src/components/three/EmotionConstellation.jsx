@@ -11,8 +11,11 @@ const EMOTION_COLORS = {
 
 function Star({ entry, index, total, onClick }) {
     const meshRef = useRef();
-    const color = EMOTION_COLORS[entry.feeling] || entry.mood_color || '#6366f1';
-    const size = 0.08 + (entry.feeling_intensity / 100) * 0.15;
+    const [hovered, setHovered] = useState(false);
+
+    const color = EMOTION_COLORS[entry.feeling] || entry.moodColor || '#6366f1';
+    const size = 0.08 + (entry.feelingIntensity / 100) * 0.15;
+
     const angle = (index / total) * Math.PI * 6;
     const radius = 1 + (index / total) * 3;
     const yBase = (Math.sin(index * 1.7) * 1.5);

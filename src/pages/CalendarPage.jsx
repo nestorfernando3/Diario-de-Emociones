@@ -64,7 +64,7 @@ export default function CalendarPage() {
 
     function getEntriesForDate(date) {
         const dateStr = date.toISOString().split('T')[0];
-        return entries.filter(e => e.entry_date === dateStr);
+        return entries.filter(e => e.entryDate === dateStr);
     }
 
     function handleDayClick(day) {
@@ -118,7 +118,7 @@ export default function CalendarPage() {
                                 {dayEntries.length > 0 && (
                                     <div className="day-dots">
                                         {dayEntries.slice(0, 3).map((e, j) => (
-                                            <span key={j} className="day-dot" style={{ background: EMOTION_COLORS[e.feeling] || e.mood_color }} />
+                                            <span key={j} className="day-dot" style={{ background: EMOTION_COLORS[e.feeling] || e.moodColor }} />
                                         ))}
                                     </div>
                                 )}
@@ -141,10 +141,10 @@ export default function CalendarPage() {
                         <div className="day-entries">
                             {dayEntries.map(entry => (
                                 <div key={entry.id} className="day-entry-card">
-                                    <div className="day-entry-color" style={{ background: EMOTION_COLORS[entry.feeling] || entry.mood_color }} />
+                                    <div className="day-entry-color" style={{ background: EMOTION_COLORS[entry.feeling] || entry.moodColor }} />
                                     <div className="day-entry-info">
                                         <strong style={{ color: EMOTION_COLORS[entry.feeling] }}>{entry.feeling}</strong>
-                                        <span className="day-entry-intensity">{entry.feeling_intensity}%{entry.re_rating != null ? ` → ${entry.re_rating}%` : ''}</span>
+                                        <span className="day-entry-intensity">{entry.feelingIntensity}%{entry.reRating != null ? ` → ${entry.reRating}%` : ''}</span>
                                         <p className="day-entry-situation">{entry.situation}</p>
                                         {entry.alternative_thought && (
                                             <p className="day-entry-alt">{entry.alternative_thought}</p>
