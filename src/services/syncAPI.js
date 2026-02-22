@@ -71,7 +71,7 @@ export const syncAPI = {
 
         const jsonString = JSON.stringify(dataToSync);
 
-        // 3. Upload to keyvalue.immanuel.co (Simple KV store with no CORS limits)
+        // 3. Upload via our custom Vercel Proxy to bypass browser CORS completely
         let blobId = null;
         let password = null;
 
@@ -80,31 +80,36 @@ export const syncAPI = {
             blobId = parts[0];
             password = parts[1];
         } else {
-            // Generate a random ID (alphanumeric, short)
-            blobId = Math.random().toString(36).substring(2, 12);
             password = syncAPI.generatePassword();
         }
 
         // 2. Encrypt data
         const encryptedPayload = await syncAPI.encryptData(jsonString, password);
-        // The KV store expects a plain string, so we stringify the encrypted object
-        const payloadString = encodeURIComponent(JSON.stringify(encryptedPayload));
 
-        // POST /api/KeyVal/UpdateValue/{AppKey}/{val}
-        const url = `https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/${blobId}/${payloadString}`;
+        // Call the Vercel Serverless Function Proxy.
+        // We use the absolute URL so it works even if running locally via Vite.
+        const url = 'https://diario-de-emociones.vercel.app/api/sync?action=upload' + (blobId ? `&blobId=${blobId}` : '');
 
         const response = await fetch(url, {
             method: 'POST',
             headers: {
-                'Content-Length': '0'
-            }
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(encryptedPayload)
         });
 
         if (!response.ok) {
-            throw new Error('Error al subir los datos a la nube. Bloqueado por red local o firewall.');
+            throw new Error('Error al subir los datos a la nube. Bloqueado por red local o servidor.');
         }
 
-        return `${blobId}@${password}`;
+        const resData = await response.json();
+
+        if (!resData || !resData.blobId) {
+            throw new Error('El proxy no devolvió un ID válido');
+        }
+
+        return `${resData.blobId}@${password}`;
     },
 
     // Pull database from JSONBlob
@@ -115,18 +120,17 @@ export const syncAPI = {
 
         const [blobId, password] = syncKey.split('@');
 
-        const response = await fetch(`https://keyvalue.immanuel.co/api/KeyVal/GetValue/${blobId}`, {
-            method: 'GET'
+        const response = await fetch(`https://diario-de-emociones.vercel.app/api/sync?action=download&blobId=${blobId}`, {
+            method: 'GET',
+            headers: { 'Accept': 'application/json' }
         });
 
         if (!response.ok) {
             throw new Error('No se encontró información para esta llave o el enlace expiró');
         }
 
-        const dataString = await response.json(); // API returns the string we sent in quotes
-        if (!dataString) throw new Error("Llave vacía o inválida");
-
-        const encryptedPayload = JSON.parse(decodeURIComponent(dataString));
+        const encryptedPayload = await response.json();
+        if (!encryptedPayload) throw new Error("Datos inválidos devueltos por la nube");
 
         const jsonString = await syncAPI.decryptData(encryptedPayload, password);
 
