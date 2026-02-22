@@ -86,9 +86,12 @@ export const syncAPI = {
         // 2. Encrypt data
         const encryptedPayload = await syncAPI.encryptData(jsonString, password);
 
-        // Call the Vercel Serverless Function Proxy.
-        // We use the absolute URL to ensure iOS Safari's Web Crypto / Fetch API correctly routes it.
-        const url = 'https://diario-de-emociones.vercel.app/api/sync?action=upload' + (blobId ? `&blobId=${blobId}` : '');
+        // Use dynamic origin to prevent Safari Cross-Origin blocks when user is on a Vercel Preview URL.
+        const baseUrl = window.location.origin.includes('localhost')
+            ? 'https://diario-de-emociones.vercel.app'
+            : window.location.origin;
+
+        const url = `${baseUrl}/api/sync?action=upload` + (blobId ? `&blobId=${blobId}` : '');
 
         const response = await fetch(url, {
             method: 'POST',
@@ -120,7 +123,11 @@ export const syncAPI = {
 
         const [blobId, password] = syncKey.split('@');
 
-        const response = await fetch(`https://diario-de-emociones.vercel.app/api/sync?action=download&blobId=${blobId}`, {
+        const baseUrl = window.location.origin.includes('localhost')
+            ? 'https://diario-de-emociones.vercel.app'
+            : window.location.origin;
+
+        const response = await fetch(`${baseUrl}/api/sync?action=download&blobId=${blobId}`, {
             method: 'GET',
             headers: { 'Accept': 'application/json' }
         });
